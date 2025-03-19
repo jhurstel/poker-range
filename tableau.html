@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau des Pourcentages</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td {
+            width: 100px;
+            height: 70px;
+            border: 1px solid black;
+            text-align: center;
+            vertical-align: top;
+            position: relative;
+            padding: 5px;
+        }
+        .bar {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 30px;
+            width: 100%;
+            display: flex;
+        }
+        .fold { background-color: blue; }
+        .call { background-color: green; }
+        .raise { background-color: red; }
+        input {
+            width: 30px;
+            text-align: center;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tbody>
+            <script>
+                for (let i = 0; i < 13; i++) {
+                    document.write('<tr>');
+                    for (let j = 0; j < 13; j++) {
+                        document.write(`
+                            <td>
+                                <div class="bar"></div>
+                                <br>
+                                <input type="number" class="fold" min="0" max="100" value="33">%
+                                <input type="number" class="call" min="0" max="100" value="33">%
+                                <input type="number" class="raise" min="0" max="100" value="34">%
+                            </td>
+                        `);
+                    }
+                    document.write('</tr>');
+                }
+            </script>
+        </tbody>
+    </table>
+    <script>
+        document.querySelectorAll('td').forEach(cell => {
+            const inputs = cell.querySelectorAll('input');
+            const bar = cell.querySelector('.bar');
+
+            function updateBars() {
+                let fold = parseInt(inputs[0].value) || 0;
+                let call = parseInt(inputs[1].value) || 0;
+                let raise = parseInt(inputs[2].value) || 0;
+                let total = fold + call + raise;
+                
+                if (total !== 100) {
+                    cell.style.backgroundColor = 'lightcoral';
+                } else {
+                    cell.style.backgroundColor = '';
+                }
+                
+                bar.innerHTML = '';
+                if (total > 0) {
+                    let foldWidth = (fold / total) * 100;
+                    let callWidth = (call / total) * 100;
+                    let raiseWidth = (raise / total) * 100;
+                    
+                    bar.innerHTML = `
+                        <div class="fold" style="width: ${foldWidth}%; height: 100%;"></div>
+                        <div class="call" style="width: ${callWidth}%; height: 100%;"></div>
+                        <div class="raise" style="width: ${raiseWidth}%; height: 100%;"></div>
+                    `;
+                }
+            }
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateBars);
+            });
+            updateBars();
+        });
+    </script>
+</body>
+</html>
